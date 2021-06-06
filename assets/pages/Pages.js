@@ -6,13 +6,11 @@ import {MyContext} from "../context/context";
 
 
 const Pages = () => {
-    const { isLoading } = useContext(MyContext);
 
     return (
         <Router>
             <Switch>
                 <Route path="/" exact>
-                    {/*{isLoading ? <Loading/> : <Dashboard/>}*/}
                     <Dashboard/>
                 </Route>
                 <Route path='*'>

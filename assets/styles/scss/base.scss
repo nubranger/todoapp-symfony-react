@@ -9,3 +9,15 @@ a {
 ul {
   list-style: none
 }
+
+.formControl {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.alert {
+  padding: 5px;
+  margin: 0;
+}
