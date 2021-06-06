@@ -10,6 +10,7 @@ import {
     ModalHeader
 } from "reactstrap";
 import {MyContext} from "../context/context";
+import AddForm from "./AddForm";
 
 const ListItem = ({item, index}) => {
     const [modal, setModal] = useState(false);
@@ -18,7 +19,7 @@ const ListItem = ({item, index}) => {
 
     const toggle = () => setModal(!modal);
 
-    const {deleteTodo, editTodo} = useContext(MyContext);
+    const {deleteTodo, editTodo, roles} = useContext(MyContext);
 
     return (
         <ListGroupItem key={index}>
@@ -26,14 +27,24 @@ const ListItem = ({item, index}) => {
             <ListGroupItemText>
                 {item.description}
             </ListGroupItemText>
-            <Button onClick={toggle} outline color="primary">edit</Button>{' '}
-            <Button onClick={() => deleteTodo(item.id)}
-                    outline
-                    color="danger"
-            >
-                delete
-            </Button>
-
+            {
+                (roles === "ROLE_ADMIN")
+                &&
+                <div>
+                    <Button onClick={toggle}
+                            outline
+                            color="primary"
+                    >
+                        edit
+                    </Button>{' '}
+                    <Button onClick={() => deleteTodo(item.id)}
+                            outline
+                            color="danger"
+                    >
+                        delete
+                    </Button>
+                </div>
+            }
             <Modal isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Edit item</ModalHeader>
                 <ModalBody>

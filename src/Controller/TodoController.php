@@ -6,6 +6,7 @@ use App\Entity\Todo;
 use App\Repository\TodoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +45,7 @@ class TodoController extends AbstractController
 
     /**
      * @Route("/create", name="todo_create", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request): JsonResponse
     {
@@ -63,11 +65,20 @@ class TodoController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="todo_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete($id): JsonResponse
     {
         try {
             $todo = $this->entityManager->getRepository(Todo::class)->find($id);
+
+            if (!$todo) {
+                return $this->json([
+                    'status' => 400,
+                    'message' => "Can't find id $id"
+                ], 400);
+            }
+
             $this->entityManager->remove($todo);
             $this->entityManager->flush();
             return $this->json($todo, 202);
@@ -82,6 +93,7 @@ class TodoController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="todo_edit", methods={"PUT"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit($id, Request $request): JsonResponse
     {
@@ -92,7 +104,7 @@ class TodoController extends AbstractController
             if (!$todo) {
                 return $this->json([
                     'status' => 400,
-                    'message' => "Cant find id $id"
+                    'message' => "Can't find id $id"
                 ], 400);
             }
 

@@ -9,6 +9,12 @@ const MyProvider = ({children}) => {
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState({type: "", text: ""});
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [account, setAccount] = useState("");
+    const [roles, setRoles] = useState("");
+
     const handleAlert = (props) => {
 
         setTimeout(() => {
@@ -27,6 +33,57 @@ const MyProvider = ({children}) => {
         if (props === "edit") {
             setAlert({type: "success", text: "Task edited!"})
         }
+    }
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+
+        axios.post('/logout')
+            .then(response => {
+                if (response.status === 200) {
+                    setAccount("");
+                    setRoles("");
+                }
+            }).catch(error => {
+            if (error.response.data.error) {
+                setError(error.response.data.error);
+            } else {
+                setError("Unknown error");
+            }
+        })
+
+
+    }
+
+    const handleAccount = ({email, password}) => {
+
+        if (email === "" || password === "") {
+            setError("Enter all fields");
+        } else {
+            setError("");
+            axios.post('/login', {
+                    username: email,
+                    password: password
+                },
+                {
+                    headers: {
+                        'content-type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    setAccount(response.headers.username);
+                    setRoles(response.headers.roles);
+                }).catch(error => {
+                if (error.response.data.error) {
+                    setError(error.response.data.error);
+                } else {
+                    setError("Unknown error");
+                }
+
+            })
+        }
+
     }
 
     //add
@@ -119,6 +176,13 @@ const MyProvider = ({children}) => {
         getTodo();
     }, []);
 
+    useEffect(() => {
+        if (window.user) {
+            let user = window.user;
+            setAccount(user.username);
+            setRoles(user.roles[0]);
+        }
+    }, []);
 
     return (
         <MyContext.Provider
@@ -128,7 +192,15 @@ const MyProvider = ({children}) => {
                 addTodo, deleteTodo, editTodo,
                 loading,
                 setLoading,
-                alert, setAlert
+                alert, setAlert,
+
+                error,
+                setPassword,
+                setEmail,
+                handleAccount,
+                handleLogout,
+                account,
+                roles, setRoles
             }}
         >
             {children}

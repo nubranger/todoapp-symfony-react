@@ -26,8 +26,8 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/index.html.twig', [
             'user' => $serializer->serialize([
-                "username"=> $username,
-                "roles"=>$roles,
+                "username" => $username,
+                "roles" => $roles,
             ], 'json')
         ]);
 

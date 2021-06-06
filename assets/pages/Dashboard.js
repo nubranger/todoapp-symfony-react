@@ -9,16 +9,20 @@ import {MyContext} from "../context/context";
 import AddForm from "../components/AddForm";
 import ListItem from "../components/ListItem";
 import Loading from "../components/Loading";
+import Account from "../components/Account";
 
 const Dashboard = () => {
-    const {list, loading} = useContext(MyContext);
+    const {list, loading, roles} = useContext(MyContext);
 
     return (
         <>
             <Container>
                 <Row>
+                    <Account/>
+                </Row>
+                <Row>
                     <Col lg={6}>
-                        <AddForm/>
+                        {(roles === "ROLE_ADMIN") && <AddForm/>}
                     </Col>
                     <Col lg={6}>
                         {
@@ -26,6 +30,7 @@ const Dashboard = () => {
                                 <Loading/>
                                 :
                                 <ListGroup className="mt-4">
+                                    <h2>Tasks</h2>
                                     {
                                         list.map((item, index) => {
 
