@@ -6,6 +6,7 @@ import {MyProvider} from "./context/context";
 import Pages from "./pages/Pages";
 
 const App = () => {
+
     return (
         <>
             <MyProvider>

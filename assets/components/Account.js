@@ -18,7 +18,7 @@ const Account = () => {
                     account ?
                         <div className="float-end">
                             {account}
-                            <Button color="secondary" onClick={handleLogout}>Logout</Button>
+                            <Button className="ms-2" color="secondary" onClick={handleLogout}>Logout</Button>
                         </div>
                         :
                         <div className="float-end">
